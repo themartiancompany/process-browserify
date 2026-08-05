@@ -62,17 +62,11 @@ native file system module.
 Usage
 =========
 
-In order for a standard *fs*-using module
+In order for a standard *process*-using module
 to seamlessly work in a browser, just
 declare using webpack,
-just add *@themartiancompany/fs* to its
-dependencies and declare the module
-a fallback for the *fs* module.
-
-Be also sure to add as a dependency
-the appropriate file system module for
-the environment the program is supposed
-to run in.
+just add *process-browserify* to its
+dependencies.
 
 For example in a *webpack.config.cjs* file.
 
@@ -92,16 +86,10 @@ For example in a *webpack.config.cjs* file.
     },
     resolve: {
       fallback: {
-        "fs":
+        "process":
           _path.resolve(
             __dirname,
-            'node_modules/@themartiancompany/fs/fs'),
-        "path":
-          false,
-        "@std/path":
-          _path.resolve(
-            __dirname,
-            'node_modules/@std/path/mod.js')
+            'node_modules/process-browserify/process'),
       },
     },
   };
@@ -116,10 +104,17 @@ Javascript [1]_ library is probably what you
 are looking for.
 
 
+Available functions
+=====================
+
+* chdir
+* cwd
+* exit
+
 Bugs
 ====
 
-https://github.com/themartiancompany/tmcfs/-/issues
+https://github.com/themartiancompany/process-browserify/-/issues
 
 
 Copyright
@@ -131,6 +126,7 @@ Copyright Pellegrino Prevete. AGPL-3.0.
 See also
 ========
 
+* tmcfs
 * opfs
 * libcrash-js
 * libcrash-bash
