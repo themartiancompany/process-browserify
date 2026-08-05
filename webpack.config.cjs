@@ -96,10 +96,10 @@ module.exports = {
   },
   resolve: {
     alias: {
-      "./fs/fs":
+      "./process/process":
         _path.resolve(
           __dirname,
-          'fs'),
+          'process'),
       "path":
         _path.resolve(
           __dirname,

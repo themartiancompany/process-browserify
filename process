@@ -27,215 +27,225 @@
  */
 
 function
-  _opfs_module_get() {
-    let
-      _fs;
-    try {
-      _fs =
-        require(
-          "opfs");
-    }
-    catch(
-      _error) {
-      console.log(
-        _error);
-      const
-        _msg =
-          "Error importing the " +
-          "'@themartiancompany/opfs' module " +
-          "as 'opfs'. If you got this error " +
-          "while bundling a webpack for a project " +
-          "depending on this module double check its " +
-          "'webpack.config.js' file or whether the " +
-          "'opfs' module is listed in developer " +
-          "dependencies and install them." +
-          "I'm sorry for this inconvenience but " +
-          "Node packagement system does not currently " +
-          "distinguish 'development' from 'build' " +
-          "dependencies.";
-      console.error(
-        _msg);
-      throw _error;
-    }
-    return _fs;
-}
-
-function
-  _fs_module_auto_detect() {
-    let
-      _fs;
-    if ( typeof window === 'undefined' &&
-         ( typeof global !== 'undefined' && global.global === global ) &&
-         typeof __webpack_require__ !== 'function' ) {
-      _fs =
-        require(
-          "node:fs");
-      _fs[
-        "fsWorkerStart"] =
-        _fs_worker_start_get(
-          _fs);
-    }
-    else {
-      _fs =
-        _opfs_module_get();
-    }
-    return _fs;
-}
-
-function
-  _fs_module_get(
-    _module_name) {
-    let
-      _fs;
-    if ( _module_name == "" ||
-         typeof _module_name === 'undefined' ) {
-      _fs =
-        _fs_module_auto_detect();
-    }
-    else if ( _module_name == 'opfs' ) {
-      _fs =
-        _opfs_module_auto_detect();
-    }
-    else if ( _module_name == 'fs' ) {
-      _fs =
-        require(
-          "node:fs");
-      _fs[
-        "fsWorkerStart"] =
-        _fs_worker_start_get(
-          _fs);
-    }
-    else {
-      const
-        _msg =
-          "Unknown file system module " +
-          `'${_module_name}'.`.
-      const
-        _error =
-        { "msg":
-            _msg };
-      console.error(
-        _msg);
-      throw _error
-    }
-    return _fs;
-}
-
-function
-  _fs_worker_start_get(
-    _fs_module) {
+  _global_get() {
   let
-    _fs_worker_start_fun;
-  _fs_worker_start_fun =
-    _fs_module.fsWorkerStart;
-  const
-    _fs_worker_start_fun_type =
-      typeof(
-        _fs_worker_start_fun);
-  if ( _fs_worker_start_fun_type == "undefined" ) {
-    _fs_worker_start_fun =
-      function () {
-        true;
-      };
-  }
-  return _fs_worker_start_fun;
-}
-
-function
-  _chdir_get(
-    _fs_module) {
-  let
-    _process_chdir;
+    _global;
   if ( typeof window === 'undefined' &&
        ( typeof global !== 'undefined' && global.global === global ) &&
-       typeof __webpack_require__ === 'function' ) {
-    _process_chdir =
-      process.chdir;
+       typeof __webpack_require__ !== 'function' ) {
+    _global =
+      global;
   }
-  else {
-    _process_chdir =
-      function
-        (_dir,
-         _fs_module) {
-        let
-          _chdir;
-        if ( typeof(
-               _fs_module) == "undefined" ||
-             _fs_module == "" ) {
-          const
-            _global =
-              _global_get();
-          if ( "_fs_module" in _global ) {
-            _fs_module =
-              _global[
-                "_fs_module"];
-          }
-          else {
-            _fs_module =
-              require(
-                "fs");
-          }
-        }
-        if ( _dir_exists(
-               _dir) ) {
-          _fs_module.CURRENT_DIR =
-            _dir;
-          _chdir =
-            true;
-        }
-        else {
-          _chdir =
-            false;
-          const
-            _msg =
-              `Directory '${_dir}' ` +
-              "does not exist.";
-          _msg_error(
-            _msg,
-            0);
-	}
-        return _chdir;
-     };
+  if ( typeof(
+         window) != "undefined" ) {
+    _global =
+      window;
   }
-  return _process_chdir;
+  return _global;
 }
 
 function
-  _is_dir_sync_get(
+  _fs_module_get() {
+  let
+    _module_found,
+    _module_name;
+  const
+    _fs_module_names = [
+      "_fs",
+      "_fs_module",
+      "fs",
+      "fs_module"
+    ];
+  const
+    _global =
+      _global_get();
+  _module_found =
+    false;
+  for ( _module_name of _fs_module_names ) {
+    if ( _module_name in _global ) {
+      _fs_module =
+        _global[
+          _module_name];
+      _module_found =
+        true;
+      break;
+    }
+  }
+  if ( ! _module_found ) {
+    _fs_module =
+      require(
+        "tmcfs");
+  }
+  return _fs_module;
+}
+
+function
+  _browser_process_module_get(
     _fs_module) {
   if ( typeof(
-       _fs_module) === "undefined" ) {
+         _fs_module) == "undefined" ||
+       _fs_module == "" ) {
     _fs_module =
-      _fs_module_auto_detect();
+      _fs_module_get();
   }
   const
-    _is_dir_sync =
-      function(
-        _path) {
-        const
-          _file_info =
-            _fs_module.statSync(
-              _path);
-        const
-          _is_dir =
-            ! _file_info.isFile();
-        return _is_dir;
-      }
-  return _is_dir_sync;
+    _process =
+      {};
+  _process[
+    "chdir"] =
+      _chdir;
+  _process[
+    "cwd"] =
+      _cwd;
+  _process[
+    "exit"] =
+      _exit;
+  return _process;
 }
+
+function
+  _process_module_auto_detect(
+    _fs_module) {
+  let
+    _process;
+  if ( _fs_module == "" ||
+       typeof(
+         _fs_module) === 'undefined' ) {
+    _fs_module =
+      _fs_module_get();
+  }
+  if ( typeof window === 'undefined' &&
+       ( typeof global !== 'undefined' && global.global === global ) &&
+       typeof __webpack_require__ !== 'function' ) {
+    _process =
+      require(
+        "node:process");
+    _process[
+      "browser"] =
+      false;
+  }
+  else {
+    _process =
+      _browser_process_module_get(
+        _fs_module);
+  }
+  return _process;
+}
+
+function
+  _process_module_get(
+    _module_name,
+    _fs_module) {
+  let
+    _process;
+  if ( _fs_module == "" ||
+       typeof(
+         _fs_module) === 'undefined' ) {
+    _fs_module =
+      _fs_module_get();
+  }
+  if ( _module_name == "" ||
+       typeof(
+         _module_name) === 'undefined' ) {
+    _process =
+      _process_module_auto_detect(
+        _fs_module);
+  }
+  else if ( _module_name == 'process-browserify' ) {
+    _process =
+      _browser_process_module_get(
+        _fs_module);
+  }
+  else if ( _module_name == 'node:process' ) {
+    _process =
+      require(
+        _module_name);
+    _process[
+      "browser"] =
+      false;
+  }
+  else if ( _module_name == 'process' ) {
+    _process =
+      _process_module_auto_detect(
+        _fs_module);
+  }
+  else {
+    const
+      _msg =
+        "Unknown process module " +
+        `'${_module_name}'.`.
+    const
+      _error =
+      { "msg":
+          _msg };
+    console.error(
+      _msg);
+    throw _error
+  }
+  return _process;
+}
+
+function
+_cwd(
+  _fs_module) {
+    if ( typeof(
+           _fs_module) == "undefined" ||
+         _fs_module == "" ) {
+      _fs_module =
+        _fs_module_get();
+    return _fs_module.CURRENT_DIR;
+}
+
+function
+  _chdir(
+    _dir,
+    _fs_module) {
+  let
+    _return;
+  if ( typeof(
+         _fs_module) == "undefined" ||
+       _fs_module == "" ) {
+    _fs_module =
+      _fs_module_get();
+  }
+  const
+    _dir_exists =
+      _fs_module.isDir;
+  if ( _dir_exists(
+         _dir) ) {
+    _fs_module.CURRENT_DIR =
+      _dir;
+    _return =
+      true;
+  }
+  else {
+    _return =
+      false;
+    const
+      _msg =
+        `Directory '${_dir}' ` +
+        "does not exist.";
+    _msg_error(
+      _msg,
+      0);
+  }
+  return _return;
+}
+
+function
+  _exit(
+    _code) {
+  return _code;
+};
+
+const
+  _fs_module =
+    _fs_module_get();
 
 const
   _process =
-    _process_module_auto_detect();
-
-_process[
-  "chdir"] =
-  _chdir_get(
-    _process);
-_fs[
-  "isDir"] =
-  _fs[
-    "isDirSync"];
+    _process_module_auto_detect(
+      _fs_module);
 
 module.exports =
   _process;

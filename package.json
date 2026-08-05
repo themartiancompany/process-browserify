@@ -95,7 +95,7 @@
       "^6.0.1"
   },
   "dependencies": {
-    "fs":
+    "tmcfs":
       "npm:@themartiancompany/fs@^0.0.18"
   },
   "optionalDependencies": {

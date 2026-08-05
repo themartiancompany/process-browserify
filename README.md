@@ -19,15 +19,16 @@
 [comment]: <> (License along with this program.)
 [comment]: <> (If not, see <https://www.gnu.org/licenses/>.)
 
-# The Martian Company's Javascript File System Module (`@themartiancompany/fs`)
+# The Martian Company's Javascript Process Module (`process-browserify`)
 
 [![NPM version](
-  https://img.shields.io/npm/v/@themartiancompany/fs.svg)](
-    https://npmjs.org/package/@themartiancompany/fs)
+  https://img.shields.io/npm/v/@themartiancompany/process-browserify.svg)](
+    https://npmjs.org/package/@themartiancompany/process-browserify)
 
-Platform-independent Javascript File System `fs` module,
-which dynamically loads either the platform's native
-`fs` module or the
+Platform-independent Javascript Process `process` module,
+which dynamically loads the platform's native
+`process` module in Node.js environment and a native browser
+implementation leveraging
 [Origin Private File System](
   https://github.com/themartiancompany/opfs)
 (OPFS) module.
@@ -41,7 +42,7 @@ $ make \
     all
 ```
 
-A `thmartiancompany-fs-<version>.tgz` archive
+A `process-browserify-<version>.tgz` archive
 will be generated in the root of the repository.
 
 To install the module system-wide run
@@ -62,14 +63,14 @@ store run
 
 ```bash
 ur \
-  "nodejs-fs"
+  "nodejs-process"
 ```
 
 A mirror of the Ur universal recipe
 has been made available on The Martian
 Company's Github at
-[`nodejs-opfs-ur`](
-  https://github.com/themartiancompany/nodejs-opfs-ur).
+[`nodejs-process-ur`](
+  https://github.com/themartiancompany/nodejs-process-ur).
 
 To download the library from
 the NPM Registry run
@@ -78,19 +79,15 @@ the NPM Registry run
 npm \
   install \
   --save \
-    "@themartiancompany/opfs"
+    "process-browserify"
 ```
 
 ### Documentation
 
 For API documentation
 refer to the
-[Happy OPFS](
-  https://github.com/themartiancompany/happy-opfs/blob/main/docs/README.md),
-[OPFS Tools](
-  https://github.com/hughfenghen/opfs-tools/blob/main/docs/api.md) and
-[File System API](
-  https://nodejs.org/api/fs.html).
+[Process API](
+  https://nodejs.org/api/process.html).
 
 Usage manual is located in `man` in reStructured
 text format and can be accessed upon module
@@ -98,7 +95,7 @@ installation with
 
 ```bash
 man \
-  "tmcfs"
+  "process-browserify"
 ```
 
 If you are looking for an example of how

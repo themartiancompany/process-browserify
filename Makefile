@@ -1,27 +1,32 @@
-# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: AGPL-3.0
 
-#    ----------------------------------------------------------------------
-#    Copyright © 2024, 2025  Pellegrino Prevete
+#    -----------------------------------------------------
+#    Copyright © 2024, 2025, 2026  Pellegrino Prevete
 #
 #    All rights reserved
-#    ----------------------------------------------------------------------
+#    -----------------------------------------------------
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    This program is free software: you can redistribute
+#    it and/or modify it under the terms of the
+#    GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of
+#    the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    This program is distributed in the hope that it
+#    will be useful, but WITHOUT ANY WARRANTY;
+#    without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#    See the GNU Affero General Public License for
+#    more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#    You should have received a copy of the
+#    GNU Affero General Public License
+#    along with this program.
+#    If not, see <https://www.gnu.org/licenses/>.
 
 PREFIX ?= /usr/local
 _NAMESPACE=themartiancompany
-_PROJECT=tmcfs
+_PROJECT=process-browserify
 DOC_DIR=$(DESTDIR)$(PREFIX)/share/doc/$(_PROJECT)
 USR_DIR=$(DESTDIR)$(PREFIX)
 BIN_DIR=$(DESTDIR)$(PREFIX)/bin
@@ -51,7 +56,7 @@ NPM_FILES=\
   "AUTHORS.rst" \
   "dist" \
   "eslint.config.mjs" \
-  "fs" \
+  "process" \
   "fs-worker.webpack.config.cjs" \
   "package.json" \
   "webpack.config.cjs"
@@ -119,7 +124,7 @@ build-npm:
 	npm \
 	  pack; \
 	mv \
-	  "$(_NAMESPACE)-fs-$${_version}.tgz" \
+	  "$(_PROJECT)-$${_version}.tgz" \
 	  ".."
 	# rm \
 	#   -rf \
@@ -140,7 +145,7 @@ install-npm:
 	npm \
 	  install \
 	    "$${_npm_opts[@]}" \
-	    "$(_NAMESPACE)-fs-$${_version}.tgz"; \
+	    "$(_PROJECT)-$${_version}.tgz"; \
 	$(_INSTALL_DIR) \
 	  "$(DESTDIR)$(PREFIX)/lib"; \
 	ln \
