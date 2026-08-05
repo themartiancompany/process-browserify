@@ -33,6 +33,12 @@ implementation leveraging
   https://github.com/themartiancompany/opfs)
 (OPFS) module.
 
+## Available browser functions
+
+- `chdir`,
+- `exit`,
+- `cwd`.
+
 ## Installation
 
 To build the Node module package from source run
