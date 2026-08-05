@@ -182,14 +182,15 @@ function
 }
 
 function
-_cwd(
-  _fs_module) {
-    if ( typeof(
-           _fs_module) == "undefined" ||
-         _fs_module == "" ) {
-      _fs_module =
-        _fs_module_get();
-    return _fs_module.CURRENT_DIR;
+  _cwd(
+    _fs_module) {
+  if ( typeof(
+         _fs_module) == "undefined" ||
+       _fs_module == "" ) {
+    _fs_module =
+      _fs_module_get();
+  }
+  return _fs_module.CURRENT_DIR;
 }
 
 function
