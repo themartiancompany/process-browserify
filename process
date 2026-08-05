@@ -134,16 +134,12 @@ function
 
 function
   _process_module_get(
-    _module_name,
-    _fs_module) {
+    _module_name) {
+  //   _fs_module) {
   let
     _process;
-  if ( _fs_module == "" ||
-       typeof(
-         _fs_module) === 'undefined' ) {
-    _fs_module =
-      _fs_module_get();
-  }
+  _fs_module =
+    _fs_module_get();
   if ( _module_name == "" ||
        typeof(
          _module_name) === 'undefined' ) {
@@ -238,9 +234,8 @@ function
   return _code;
 };
 
-const
-  _fs_module =
-    _fs_module_get();
+_fs_module =
+  _fs_module_get();
 
 const
   _process =
