@@ -33,7 +33,7 @@ const
       __dirname);
 const
   _input_file_name =
-    "fs";
+    "process";
 const
   _output_file_name =
     `${_input_file_name}.js`;
