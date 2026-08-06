@@ -4,7 +4,7 @@
   "description":
     "Platform-independent Process ('process') module.",
   "version":
-    "0.0.2",
+    "0.0.3",
   "homepage":
     "https://github.com/themartiancompany/process-browserify",
   "license":
