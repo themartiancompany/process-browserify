@@ -35,6 +35,7 @@ implementation leveraging
 
 ## Available browser functions
 
+- `argv`,
 - `chdir`,
 - `exit`,
 - `cwd`.

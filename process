@@ -92,6 +92,9 @@ function
     _process =
       {};
   _process[
+    "argv"] =
+      _argv;
+  _process[
     "chdir"] =
       _chdir;
   _process[
@@ -179,6 +182,75 @@ function
     throw _error
   }
   return _process;
+}
+
+function
+  _argv(
+    _key_name) {
+  let
+    _assignment,
+    _assignments,
+    _key,
+    _key_value,
+    _location,
+    _msg,
+    _result,
+    _url,
+    _value;
+  if ( typeof(
+         _key_name) === 'undefined' ||
+       _key_name == "" ||
+       _key_name == null ) {
+    _msg =
+      "Getting all values.";
+    _msg_info(
+      _msg);
+    _key_name =
+      "";
+  }
+  const
+    _return =
+      [];
+  _location =
+    window.location;
+  _url =
+    _location.search.substring(
+      1);
+  _assignments =
+    _url.split(
+      '&');
+  for ( _result =
+          0;
+        _result <
+          _assignments.length;
+        _result++ ) {
+    _assignment =
+      _assignments[
+        _result];
+    _key_value =
+      _assignment.split(
+        '=');
+    _key =
+      _key_value[
+        0];
+    if ( _key.length < 2 ) {
+      _return.push(
+        `-${_key}`);
+    }
+    else {
+      _return.push(
+        `--${_key}`);
+    }
+    if ( _key == _key_name ||
+         _key_name == "" ) {
+      _value =
+        _key_value[
+          1];
+      _return.push(
+        _value);
+    }
+  }
+  return _return;
 }
 
 function
