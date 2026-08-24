@@ -47,7 +47,7 @@
     "module",
   "files": [
     "COPYING",
-    "AUTHORS.md",
+    "AUTHORS.rst",
     "README.md",
     "dist",
     "eslint.config.mjs",

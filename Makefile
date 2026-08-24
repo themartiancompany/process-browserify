@@ -38,10 +38,10 @@ BUILD_NPM_DIR=build
 
 _MAKE_EXE=\
   chmod \
-    755
+    0755
 _MAKE_LINK=\
   ln \
-    -s
+    -sv
 _INSTALL_FILE=\
   install \
     -vDm644
