@@ -26,15 +26,22 @@
 
 PREFIX ?= /usr/local
 _NAMESPACE=themartiancompany
-_PROJECT=process-browserify
+_MODULE=process
+_PROJECT=$(_MODULE)-browserify
 DOC_DIR=$(DESTDIR)$(PREFIX)/share/doc/$(_PROJECT)
 USR_DIR=$(DESTDIR)$(PREFIX)
 BIN_DIR=$(DESTDIR)$(PREFIX)/bin
 LIB_DIR=$(DESTDIR)$(PREFIX)/lib/$(_PROJECT)
 MAN_DIR?=$(DESTDIR)$(PREFIX)/share/man
-NODE_DIR=$(PREFIX)/lib/node_modules/$(_PROJECT)
+NODE_DIR=$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)
 BUILD_NPM_DIR=build
 
+_MAKE_EXE=\
+  chmod \
+    755
+_MAKE_LINK=\
+  ln \
+    -s
 _INSTALL_FILE=\
   install \
     -vDm644
@@ -64,20 +71,25 @@ SCRIPT_FILES=\
   $(wildcard \
       $(_PROJECT)/*)
 
-all: build-man build-npm
+all: build
 
-check: shellcheck
+build:
 
-shellcheck:
-
-	shellcheck \
-	  -s \
-	    "bash" \
-	  $(SCRIPT_FILES)
-
-install: install-man install-npm
-
-publish: publish-npm
+	if [[ "$(_NPM)" == "false" ]]; then \
+	  make \
+	    build-webpack; \
+	elif [[ "$(_NPM)" == "true" ]]; then \
+	  make \
+	    build-npm; \
+	else \
+	  echo \
+	   "Invalid value for '$(_NPM)'." \
+	   1>&2; \
+	   exit \
+	     1; \
+	fi
+	make \
+	  build-man
 
 build-man:
 
@@ -130,6 +142,67 @@ build-npm:
 	#   -rf \
 	#   "build/node_modules";
 
+build-webpack:
+
+	cp \
+	  -r \
+	  "$(_MODULE)" \
+	  "dist" \
+	  "fs-worker.webpack.config.cjs" \
+	  "webpack.config.cjs" \
+	  "build"
+	_webpack=( \
+	  "$$(command \
+	        -v \
+	        "webpack")"; \
+	if [[ "${_webpack}" == "" ]]; then \
+	  _webpack=(
+	    npx
+	      webpack); \
+	fi; \
+	cd \
+	  "build"; \
+	if [[ ! -e "fs-worker.js" ]]; then \
+          "${_webpack[@]}" \
+	    --mode \
+	      'production' \
+	    --config \
+	    'fs-worker.webpack.config.cjs' \
+	    --stats-error-details; \
+	fi; \
+	cp \
+	  'fs-worker.js' \
+	  'dist/$(_MODULE)/fs-worker.js'; \
+	cp \
+	  'fs-worker.js' \
+	  'dist/$(_MODULE)/fs-worker.js'; \
+	if [[ ! -e "$(_MODULE).js" ]]; then \
+          "${_webpack[@]}" \
+	    --mode \
+	      'production' \
+	    --config \
+	      'webpack.config.cjs' \
+	    --stats-error-details; \
+	fi; \
+	cp \
+	  "$(_MODULE).js" \
+	  "dist/$(_MODULE)/$(_MODULE).js"
+
+
+
+check: shellcheck
+
+shellcheck:
+
+	shellcheck \
+	  -s \
+	    "bash" \
+	  $(SCRIPT_FILES)
+
+install: install-man install-npm
+
+publish: publish-npm
+
 install-npm:
 
 	_npm_opts=( \
@@ -150,7 +223,7 @@ install-npm:
 	  "$(DESTDIR)$(PREFIX)/lib"; \
 	ln \
 	  -s \
-	  "$(NODE_DIR)" \
+          "$(PREFIX)/lib/node_modules/$(_PROJECT) \
 	  "$(LIB_DIR)" || \
 	true
 
@@ -173,5 +246,64 @@ install-man:
 	rst2man \
 	  "man/$(_PROJECT).1.rst" \
 	  "$(MAN_DIR)/man1/$(_PROJECT).1"
+
+install-man:
+
+	$(_INSTALL_DIR) \
+	  "$(MAN_DIR)/man1"
+	rst2man \
+	  "man/$(_PROJECT).1.rst" \
+	  "$(MAN_DIR)/man1/$(_PROJECT).1"
+
+install-scripts:
+
+	if [[ "$(_NPM)" == "false" ]]; then \
+	  $(_INSTALL_DIR) \
+	    "$(LIB_DIR)"; \
+	  cp \
+	    -r \
+	    $$(printf \
+	         "$${PWD}/%s " \
+	         $$(cat \
+	              "$${PWD}/package.json" | \
+	              jq \
+	                --raw-output \
+	                '.files[]')) \
+	    "$(LIB_DIR)"; \
+	  rm \
+	    -rf \
+            "$(NODE_DIR)"; \
+	  $(_INSTALL_DIR) \
+	    "$$(dirname \
+	          "$(NODE_DIR)")"; \
+	  $(_MAKE_LINK) \
+	    "$(LIB_DIR)" \
+	    "$(NODE_DIR)" || \
+	    true; \
+	  $(_MAKE_LINK) \
+	    "$(LIB_DIR)" \
+	    "$(PREFIX)/lib/node_modules/$(_PROJECT)" || \
+	    true; \
+	elif [[ "$(_NPM)" == "true" ]]; then \
+	  make \
+	    install-npm; \
+	  $(_MAKE_LINK) \
+	   "$(PREFIX)/lib/node_modules/@$(_NAMESPACE)/$(_MODULE)" \
+	   "$(LIB_DIR)" || \
+	   true; \
+	  $(_MAKE_LINK) \
+	    "$(PREFIX)/lib/node_modules/@$(_NAMESPACE)/$(_MODULE)" \
+	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" || \
+	  true; \
+	fi
+
+uninstall-scripts:
+
+	rm \
+	  -vrf \
+	  "$(LIB_DIR)" \
+	  "$(NODE_DIR)" \
+	  "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" || \
+	true
 
 .PHONY: check build-docs build-man build-npm install install-man install-npm publish-npm shellcheck

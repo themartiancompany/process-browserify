@@ -26,6 +26,10 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+const
+  _echo2 =
+    console.error;
+
 function
   _global_get() {
   let
@@ -44,7 +48,7 @@ function
   return _global;
 }
 
-function
+async function
   _fs_module_get() {
   let
     _module_found,
@@ -73,21 +77,67 @@ function
   }
   if ( ! _module_found ) {
     _fs_module =
-      require(
+      await import(
         "tmcfs");
   }
   return _fs_module;
 }
 
-function
+async function
+  _stream_module_get() {
+  let
+    _module_found,
+    _module_name;
+  const
+    _stream_module_names = [
+      "_stream",
+      "_stream_module",
+      "stream",
+      "stream_module"
+    ];
+  const
+    _global =
+      _global_get();
+  _module_found =
+    false;
+  for ( _module_name of _stream_module_names ) {
+    if ( _module_name in _global ) {
+      _stream_module =
+        _global[
+          _module_name];
+      _module_found =
+        true;
+      break;
+    }
+  }
+  if ( ! _module_found ) {
+    _stream_module =
+      await import(
+        "stream-browserify");
+  }
+  return _stream_module;
+}
+
+async function
   _browser_process_module_get(
-    _fs_module) {
+    _fs_module,
+    _stream_module) {
   if ( typeof(
          _fs_module) == "undefined" ||
        _fs_module == "" ) {
     _fs_module =
-      _fs_module_get();
+      await _fs_module_get();
   }
+  if ( typeof(
+         _stream_module) == "undefined" ||
+       _stream_module == "" ) {
+    _stream_module =
+      await _stream_module_get();
+  }
+  const
+    _stdout =
+      await _stdout_get(
+        _stream_module);
   const
     _process =
       {};
@@ -103,70 +153,94 @@ function
   _process[
     "exit"] =
       _exit;
+  _process[
+    "stdout"] =
+      _stdout;
   return _process;
 }
 
-function
+async function
   _process_module_auto_detect(
-    _fs_module) {
+    _fs_module,
+    _stream_module) {
   let
     _process;
   if ( _fs_module == "" ||
        typeof(
          _fs_module) === 'undefined' ) {
     _fs_module =
-      _fs_module_get();
+      await _fs_module_get();
+  }
+  if ( _stream_module == "" ||
+       typeof(
+         _stream_module) === 'undefined' ) {
+    _stream_module =
+      await _stream_module_get();
   }
   if ( typeof window === 'undefined' &&
        ( typeof global !== 'undefined' && global.global === global ) &&
        typeof __webpack_require__ !== 'function' ) {
+    const
+      _process_module =
+        await import(
+          "node:process");
     _process =
-      require(
-        "node:process");
+      _process_module.default;
     _process[
       "browser"] =
       false;
   }
   else {
     _process =
-      _browser_process_module_get(
-        _fs_module);
+      await _browser_process_module_get(
+        _fs_module,
+        _stream_module);
   }
   return _process;
 }
 
-function
+async function
   _process_module_get(
     _module_name) {
   //   _fs_module) {
   let
     _process;
-  _fs_module =
-    _fs_module_get();
+  const
+    _fs_module =
+      await _fs_module_get();
+  const
+    _stream_module =
+      await _stream_module_get();
   if ( _module_name == "" ||
        typeof(
          _module_name) === 'undefined' ) {
     _process =
-      _process_module_auto_detect(
-        _fs_module);
+      await _process_module_auto_detect(
+        _fs_module,
+        _stream_module);
   }
   else if ( _module_name == 'process-browserify' ) {
     _process =
-      _browser_process_module_get(
-        _fs_module);
+      await _browser_process_module_get(
+        _fs_module,
+        _stream_module);
   }
   else if ( _module_name == 'node:process' ) {
+    const
+      _process_module =
+        await import(
+          _module_name);
     _process =
-      require(
-        _module_name);
+      _process_module.default;
     _process[
       "browser"] =
       false;
   }
   else if ( _module_name == 'process' ) {
     _process =
-      _process_module_auto_detect(
-        _fs_module);
+      await _process_module_auto_detect(
+        _fs_module,
+        _stream_module);
   }
   else {
     const
@@ -177,7 +251,7 @@ function
       _error =
       { "msg":
           _msg };
-    console.error(
+    _echo2(
       _msg);
     throw _error
   }
@@ -201,10 +275,6 @@ function
          _key_name) === 'undefined' ||
        _key_name == "" ||
        _key_name == null ) {
-    _msg =
-      "Getting all values.";
-    _msg_info(
-      _msg);
     _key_name =
       "";
   }
@@ -253,19 +323,19 @@ function
   return _return;
 }
 
-function
+async function
   _cwd(
     _fs_module) {
   if ( typeof(
          _fs_module) == "undefined" ||
        _fs_module == "" ) {
     _fs_module =
-      _fs_module_get();
+      await _fs_module_get();
   }
   return _fs_module.CURRENT_DIR;
 }
 
-function
+async function
   _chdir(
     _dir,
     _fs_module) {
@@ -275,7 +345,7 @@ function
          _fs_module) == "undefined" ||
        _fs_module == "" ) {
     _fs_module =
-      _fs_module_get();
+      await _fs_module_get();
   }
   const
     _dir_exists =
@@ -294,9 +364,14 @@ function
       _msg =
         `Directory '${_dir}' ` +
         "does not exist.";
-    _msg_error(
-      _msg,
-      0);
+    const
+      _exception = {
+        "msg":
+          _msg
+      };
+    _echo2(
+      _msg);
+    throw _exception;
   }
   return _return;
 }
@@ -307,15 +382,51 @@ function
   return _code;
 };
 
-_fs_module =
-  _fs_module_get();
+async function
+  _stdout_get(
+    _stream_module) {
+  let
+    _stdout;
+  _stdout =
+    _stream_module;
+  if ( typeof(
+         _stream_module) == "undefined" ||
+       _stream_module == "" ||
+       _stream_module == {} ) {
+    _stdout =
+      await _stream_module_get();
+  }
+  return _stdout;
+}
+
+
+const
+  _fs_module =
+    await _fs_module_get();
+const
+  _stream_module =
+    await _stream_module_get();
 
 const
   _process =
     _process_module_auto_detect(
-      _fs_module);
+      _fs_module,
+      _stream_module);
 
-module.exports =
-  _process;
-module.exports.getModule =
-  _process_module_get;
+
+// ES6 module exports
+
+const
+  getModule =
+    _process_module_get;
+export default _process;
+export {
+  getModule
+};
+
+// Common Javascript exports
+
+// module.exports =
+//   _process;
+// module.exports.getModule =
+//   _process_module_get;

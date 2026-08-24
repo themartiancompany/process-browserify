@@ -29,13 +29,15 @@ import { defineConfig } from "eslint/config";
 
 const
   _project =
-    "fs";
+    "process";
 const
   _ignores = [
     "build/**",
     "dist/**",
     "**/fs-worker.js",
+    "**/*.fs-worker.js",
     `**/${_project}.js`,
+    `**/*.${_project}.js`,
     "eslint.config.js"
   ];
 export default defineConfig([
@@ -60,8 +62,7 @@ export default defineConfig([
  { ignores:
      _ignores,
    files:
-     [ "**/*.js",
-       `${_project}/*` ],
+     [ "**/*.{cjs,js}",
    languageOptions:
      { sourceType:
          "commonjs" } },
