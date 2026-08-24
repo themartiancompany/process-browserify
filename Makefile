@@ -277,23 +277,27 @@ install-scripts:
 	    "$$(dirname \
 	          "$(NODE_DIR)")"; \
 	  $(_MAKE_LINK) \
-	    "$(LIB_DIR)" \
+	    "$(PREFIX)/lib/$(_PROJECT)" \
+	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_MODULE)" || \
+	    true; \
+	  $(_MAKE_LINK) \
+	    "$(PREFIX)/lib/$(_PROJECT)" \
 	    "$(NODE_DIR)" || \
 	    true; \
 	  $(_MAKE_LINK) \
-	    "$(LIB_DIR)" \
-	    "$(PREFIX)/lib/node_modules/$(_PROJECT)" || \
+	    "$(PREFIX)/lib/node_modules" \
+	    "$(LIB_DIR)/node_modules" || \
 	    true; \
 	elif [[ "$(_NPM)" == "true" ]]; then \
 	  make \
 	    install-npm; \
 	  $(_MAKE_LINK) \
-	   "$(PREFIX)/lib/node_modules/@$(_NAMESPACE)/$(_MODULE)" \
-	   "$(LIB_DIR)" || \
-	   true; \
+	    "$(PREFIX)/lib/node_modules/$(_PROJECT)" \
+	    "$(DESTDIR)$(PREFIX)/lib/node_modules/@$(_NAMESPACE)/$(_MODULE)" || \
+	    true; \
 	  $(_MAKE_LINK) \
-	    "$(PREFIX)/lib/node_modules/@$(_NAMESPACE)/$(_MODULE)" \
-	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" || \
+	    "$(PREFIX)/lib/node_modules/$(_PROJECT)" \
+	    "$(LIB_DIR)" || \
 	  true; \
 	fi
 
@@ -303,7 +307,7 @@ uninstall-scripts:
 	  -vrf \
 	  "$(LIB_DIR)" \
 	  "$(NODE_DIR)" \
-	  "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" || \
+	  "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_MODULE)" || \
 	true
 
 .PHONY: check build-docs build-man build-npm install install-man install-npm publish-npm shellcheck
