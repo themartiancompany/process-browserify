@@ -62,7 +62,7 @@ export default defineConfig([
  { ignores:
      _ignores,
    files:
-     [ "**/*.{cjs,js}",
+     [ "**/*.{cjs,js}" ],
    languageOptions:
      { sourceType:
          "commonjs" } },
