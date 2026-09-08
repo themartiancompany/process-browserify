@@ -26,6 +26,14 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* Browser mocks */
+
+function
+  _exit(
+    _code) {
+  return _code;
+};
+
 const
   _echo2 =
     console.error;
@@ -47,6 +55,28 @@ function
   }
   return _global;
 }
+
+function
+  _env_get(
+    _variable) {
+  let
+    _value;
+  const
+    _variable_type =
+      typeof(
+        _variable);
+  const
+    _global =
+      _global_get();
+  if ( _variable_type == "undefined" ) {
+    _value =
+      _global[
+        _variable];
+    return _value;
+  }
+  return global;
+};
+
 
 async function
   _fs_module_get() {
@@ -151,6 +181,12 @@ async function
     "cwd"] =
       _cwd;
   _process[
+    "env"] =
+      _env_get();
+  _process[
+    "envGet"] =
+      _env_get();
+  _process[
     "exit"] =
       _exit;
   _process[
@@ -235,6 +271,9 @@ async function
     _process[
       "browser"] =
       false;
+    _process[
+      "envGet"] =
+      _env_get;
   }
   else if ( _module_name == 'process' ) {
     _process =
@@ -375,12 +414,6 @@ async function
   }
   return _return;
 }
-
-function
-  _exit(
-    _code) {
-  return _code;
-};
 
 async function
   _stdout_get(

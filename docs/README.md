@@ -6,7 +6,9 @@ missing `process` function for
 browser environments.
 
 - [`argv`](
-    argv.md).
+    argv.md),
+- [`env`](
+    env.md).
 
 This documentation is released
 under the terms of the
