@@ -185,7 +185,7 @@ async function
       _env_get();
   _process[
     "envGet"] =
-      _env_get();
+      _env_get;
   _process[
     "exit"] =
       _exit;
