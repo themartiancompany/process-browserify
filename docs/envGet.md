@@ -26,23 +26,15 @@
 
 # `env`
 
-On a browser `process.env` is `window`.
-
-```html
-https://my.domain/my-page.html?option=value&o=another-value
-```
-
-then `process.argv` becomes
+On Node.js `process.env` is a variable, so given
+in a browser it's `window` evaluated at `process`
+module import time.
 
 ```javascript
-> console.log(
-    process.argv);
-[
-  "--option",
-  "value",
-  "-o",
-  "another-value"
-]
+> _env =
+    process.env);
+> _env
+{"a_bash_variable": "variable_value" }
 ```
 
 This document is released under the terms of the
