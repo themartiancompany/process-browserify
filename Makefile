@@ -167,7 +167,7 @@ build-webpack:
 	    install \
 	      "." \
 	      --save-dev; \
-	  _webpack=(
+	  _webpack=( \
 	    npx
 	      webpack); \
 	fi; \
