@@ -25,6 +25,7 @@
 #    If not, see <https://www.gnu.org/licenses/>.
 
 _NPM ?= false
+SHELL ?= bash
 PREFIX ?= /usr/local
 _NAMESPACE=themartiancompany
 _MODULE=process
@@ -145,6 +146,8 @@ build-npm:
 
 build-webpack:
 
+	$(_INSTALL_DIR) \
+	  "$${PWD}/build"
 	cp \
 	  -r \
 	  "$(_MODULE)" \
