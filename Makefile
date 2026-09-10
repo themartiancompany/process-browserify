@@ -210,7 +210,7 @@ shellcheck:
 	    "bash" \
 	  $(SCRIPT_FILES)
 
-install: install-man install-npm
+install: install-man install-scripts
 
 publish: publish-npm
 
@@ -328,4 +328,4 @@ uninstall-scripts:
 	  "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_MODULE)" || \
 	true
 
-.PHONY: check build-docs build-man build-npm install install-man install-npm publish-npm shellcheck
+.PHONY: check build build-docs build-man build-npm install install-man install-npm install-scripts publish-npm shellcheck uninstall-scripts
