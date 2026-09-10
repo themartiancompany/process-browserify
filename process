@@ -81,6 +81,7 @@ function
 async function
   _fs_module_get() {
   let
+    _fs_module,
     _module_found,
     _module_name;
   const
@@ -117,7 +118,8 @@ async function
   _stream_module_get() {
   let
     _module_found,
-    _module_name;
+    _module_name,
+    _stream_module;
   const
     _stream_module_names = [
       "_stream",
@@ -225,6 +227,9 @@ async function
     _process[
       "browser"] =
       false;
+    _process[
+      "envGet"] =
+      _env_get;
   }
   else {
     _process =
@@ -442,10 +447,9 @@ const
 
 const
   _process =
-    _process_module_auto_detect(
+    await _process_module_auto_detect(
       _fs_module,
       _stream_module);
-
 
 // ES6 module exports
 
