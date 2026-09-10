@@ -152,7 +152,9 @@ build-webpack:
 	  -r \
 	  "$(_MODULE)" \
 	  "dist" \
+	  "eslint.config.mjs" \
 	  "fs-worker.webpack.config.cjs" \
+	  "package.json" \
 	  "webpack.config.cjs" \
 	  "build"
 	_webpack=( \
