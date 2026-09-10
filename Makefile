@@ -160,13 +160,17 @@ build-webpack:
 	        -v \
 	        "webpack" || \
 	      true)"; \
+	cd \
+	  "build"; \
 	if [[ "${_webpack}" == "" ]]; then \
+	  npm \
+	    install \
+	      "." \
+	      --save-dev; \
 	  _webpack=(
 	    npx
 	      webpack); \
 	fi; \
-	cd \
-	  "build"; \
 	if [[ ! -e "fs-worker.js" ]]; then \
           "${_webpack[@]}" \
 	    --mode \
