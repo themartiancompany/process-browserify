@@ -158,7 +158,8 @@ build-webpack:
 	_webpack=( \
 	  "$$(command \
 	        -v \
-	        "webpack")"; \
+	        "webpack" || \
+	      true)"; \
 	if [[ "${_webpack}" == "" ]]; then \
 	  _webpack=(
 	    npx
