@@ -168,11 +168,11 @@ build-webpack:
 	      "." \
 	      --save-dev; \
 	  _webpack=( \
-	    npx
+	    npx \
 	      webpack); \
 	fi; \
 	if [[ ! -e "fs-worker.js" ]]; then \
-          "${_webpack[@]}" \
+          "$${_webpack[@]}" \
 	    --mode \
 	      'production' \
 	    --config \
@@ -186,7 +186,7 @@ build-webpack:
 	  'fs-worker.js' \
 	  'dist/$(_MODULE)/fs-worker.js'; \
 	if [[ ! -e "$(_MODULE).js" ]]; then \
-          "${_webpack[@]}" \
+          "$${_webpack[@]}" \
 	    --mode \
 	      'production' \
 	    --config \
