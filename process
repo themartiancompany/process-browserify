@@ -203,15 +203,21 @@ async function
     _stream_module) {
   let
     _process;
-  if ( _fs_module == "" ||
-       typeof(
-         _fs_module) === 'undefined' ) {
+  const
+    _fs_module_type =
+      typeof(
+        _fs_module);
+  const
+    _stream_module_type =
+      typeof(
+        _stream_module);
+  if ( _fs_module_type === 'undefined' ||
+         _fs_module === "" ) {
     _fs_module =
       await _fs_module_get();
   }
-  if ( _stream_module == "" ||
-       typeof(
-         _stream_module) === 'undefined' ) {
+  if ( _stream_module_type === 'undefined' ||
+       _stream_module === "" ) {
     _stream_module =
       await _stream_module_get();
   }
@@ -372,7 +378,7 @@ async function
     _fs_module) {
   if ( typeof(
          _fs_module) == "undefined" ||
-       _fs_module == "" ) {
+       _fs_module === "" ) {
     _fs_module =
       await _fs_module_get();
   }
@@ -387,7 +393,7 @@ async function
     _return;
   if ( typeof(
          _fs_module) == "undefined" ||
-       _fs_module == "" ) {
+       _fs_module === "" ) {
     _fs_module =
       await _fs_module_get();
   }
