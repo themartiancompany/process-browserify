@@ -68,7 +68,7 @@ function
   const
     _global =
       _global_get();
-  if ( _variable_type == "undefined" ) {
+  if ( _variable_type != "undefined" ) {
     _value =
       _global[
         _variable];
