@@ -83,16 +83,18 @@
       "^10.0.1",
     "eslint":
       "^10.9.0",
+    "fast-uri":
+      "^4.1.4",
     "globals":
       "^17.3.0",
     "opfs":
-      "npm:@themartiancompany/opfs@^2.0.13",
+      "npm:@themartiancompany/opfs@^2.0.22",
     "safely-serve":
       "^0.0.21",
     "stream-browserify":
       "^3.0.0",
     "tmcfs":
-      "npm:@themartiancompany/fs@^0.0.26",
+      "npm:@themartiancompany/fs@^0.0.27",
     "web-worker":
       "^1.5.0",
     "webpack":
@@ -108,7 +110,7 @@
     "stream-browserify":
       "^3.0.0",
     "tmcfs":
-      "npm:@themartiancompany/fs@^0.0.26"
+      "npm:@themartiancompany/fs@^0.0.27"
   },
   "overrides": {
     "process":
