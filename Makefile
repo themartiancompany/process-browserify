@@ -259,7 +259,7 @@ install-scripts:
 
 	if [[ "$(_NPM)" == "false" ]]; then \
 	  $(_INSTALL_DIR) \
-	    "$(LIB_DIR)"; \
+	    "$(LIB_DIR)/nodejs"; \
 	  cp \
 	    -r \
 	    $$(printf \
@@ -269,7 +269,7 @@ install-scripts:
 	              jq \
 	                --raw-output \
 	                '.files[]')) \
-	    "$(LIB_DIR)"; \
+	    "$(LIB_DIR)/nodejs"; \
 	  rm \
 	    -rf \
             "$(NODE_DIR)"; \
@@ -277,16 +277,23 @@ install-scripts:
 	    "$$(dirname \
 	          "$(NODE_DIR)")"; \
 	  $(_MAKE_LINK) \
-	    "$(PREFIX)/lib/$(_PROJECT)" \
+	    "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
 	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_MODULE)" || \
 	    true; \
 	  $(_MAKE_LINK) \
-	    "$(PREFIX)/lib/$(_PROJECT)" \
+	    "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
 	    "$(NODE_DIR)" || \
 	    true; \
 	  $(_MAKE_LINK) \
 	    "$(PREFIX)/lib/node_modules" \
 	    "$(LIB_DIR)/node_modules" || \
+	    true; \
+	  $(_INSTALL_DIR) \
+	    "$(DESTDIR)$(PREFIX)/lib/node_modules/@$(_NAMESPACE)" || \
+	  true; \
+	  $(_MAKE_LINK) \
+	    "$(PREFIX)/lib/$(PROJECT)/nodejs" \
+	    "$(DESTDIR)$(PREFIX)/lib/node_modules/@$(_NAMESPACE)/$(_MODULE)" || \
 	    true; \
 	elif [[ "$(_NPM)" == "true" ]]; then \
 	  make \
