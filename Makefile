@@ -159,7 +159,7 @@ build-webpack:
 	  "$$(command \
 	        -v \
 	        "webpack" || \
-	      true)"; \
+	      true)"); \
 	cd \
 	  "build"; \
 	if [[ "${_webpack}" == "" ]]; then \
